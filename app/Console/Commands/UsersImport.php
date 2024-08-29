@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 
 class UsersImport extends Command
 {
@@ -12,7 +13,7 @@ class UsersImport extends Command
      *
      * @var string
      */
-    protected $signature = 'users:import';
+    protected $signature = 'users:import {file=public/convertcsv.csv : The CSV file path}';
 
     /**
      * The console command description.
@@ -26,9 +27,8 @@ class UsersImport extends Command
      */
     public function handle()
     {
-        // Get the file path
-        // TODO: we can also pass the file path as an argument of the command
-        $filePath = public_path('convertcsv.csv');
+        // Get the file path from the argument
+        $filePath = $this->argument('file');
 
         // Check if file exists
         if (!file_exists($filePath)) {
@@ -41,10 +41,23 @@ class UsersImport extends Command
             // Read the header row
             $header = fgetcsv($handle);
 
+            // Check if header is valid
+            if (!$header || !in_array('email', $header)) {
+                $this->error('Invalid CSV format.');
+                fclose($handle);
+                return;
+            }
+
             // Process each row of the CSV file
             while (($row = fgetcsv($handle)) !== false) {
                 $userData = array_combine($header, $row);
 
+                // Handle password hashing
+                if (isset($userData['password'])) {
+                    $userData['password'] = Hash::make($userData['password']);
+                }
+
+                // Update or create user
                 User::updateOrCreate(['email' => $userData['email']], $userData);
 
                 // Output to console
