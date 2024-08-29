@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "015011c5-104b-4dd7-8792-29628c665537",
+		"name": "Laravel Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24924682"
+	},
+	"item": [
+		{
+			"name": "Laravel Test 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "postman-cloud:///1ef66280-3cdd-4200-91ee-d0fd61d9a4c3"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/upload-image",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"upload-image"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
